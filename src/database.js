@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
-const MONGODB_URI = 'mongodb://localhost/pueba-tec';
-//const MONGODB_URI =process.env.MONGODB_URI
+//const MONGODB_URI ='mongodb://localhost/pueba-tec'
+require('dotenv').config();
+
+
+const { MONGODB_HOST, MONGODB_DATABASE} = process.env;
+const MONGODB_URI = `mongodb://${MONGODB_HOST}/${MONGODB_DATABASE}`;
 mongoose.connect(MONGODB_URI, {
     useUnifiedTopology:true,
     useNewUrlParser:true
 })
 
-    .then(db => console.log('Database is connected'))
+    .then(db => console.log('connected'))
     .catch(err => console.log(err));
+
