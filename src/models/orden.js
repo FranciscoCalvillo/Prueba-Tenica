@@ -1,6 +1,7 @@
 const {Schema,model}=require('mongoose');
+const { count } = require('./user');
 
-const NoteSchema = new Schema({
+const OrdenSchema = new Schema({
     latitudOrigen: {
         type: Float32Array,
         require: true
@@ -57,5 +58,9 @@ const NoteSchema = new Schema({
 }, {
     timestamps: true
 })
+
+OrdenSchema.methods.countArticles = function() {
+    return this.numeroProductos = this.Pesos.length
+}
 
 module.exports=model('OrdenCompra',OrdenSchema); 
