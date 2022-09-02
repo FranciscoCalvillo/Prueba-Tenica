@@ -20,13 +20,13 @@ app.engine('.hbs', exphbs.engine ({
 }));
 app.set('view engine', '.hbs');
 
-//static files
-app.use(express.static(path.join(__dirname,'public')));
 
 //routes
-app.get('/',(req,res)=>{
-    res.render('index')
-})
+app.use(require('./routes/index.routes') );
+app.use(require('./routes/orden.routes'));
+
+//static files
+app.use(express.static(path.join(__dirname,'public')));
 
 //exports
 module.exports=app;
