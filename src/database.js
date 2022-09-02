@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-//const MONGODB_URI ='mongodb://localhost/pueba-tec'
 require('dotenv').config();
 
 
