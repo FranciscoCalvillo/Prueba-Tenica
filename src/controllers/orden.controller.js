@@ -1,11 +1,12 @@
 const ordenCntrl ={};
 
 ordenCntrl.renderNewOrden = (req,res)=>{
-    res.send('Add ORDER');
+    res.render('orden/newOrden')
 };
 
 ordenCntrl.createNewOrdenForm = (req,res) =>{
-    res.send('new orden');
+    console.log(req.body);
+    res.send('new order')
 } 
 
 ordenCntrl.consultOrden =  (req,res) => {

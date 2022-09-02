@@ -4,9 +4,11 @@ const app = express();
 const exphbs = require('express-handlebars');
 const { extname } = require("path");
 const path = require('path');
+const morgan= require('morgan');
 
 //middsets
 app.use(express.json());
+app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 
 //Settings

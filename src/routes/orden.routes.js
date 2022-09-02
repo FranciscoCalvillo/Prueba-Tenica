@@ -9,7 +9,7 @@ const {
 
 //add order
 router.get('/orden/add', renderNewOrden);
-router.post('/orden/add', createNewOrdenForm);
+router.post('/orden/new-orden', createNewOrdenForm);
 
 // get order
 router.get('/orden', consultOrden);
