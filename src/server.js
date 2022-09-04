@@ -24,8 +24,9 @@ app.set('view engine', '.hbs');
 
 
 //routes
-app.use(require('./routes/index.routes') );
+//app.use(require('./routes/index.routes') );
 app.use(require('./routes/orden.routes'));
+app.use(require('./routes/users.routes'));
 
 //static files
 app.use(express.static(path.join(__dirname,'public')));

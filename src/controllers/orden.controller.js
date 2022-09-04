@@ -2,12 +2,7 @@ const ordenCntrl = {};
 //const _ = require('underscore');
 
 const Orden = require('../models/orden');
-const { checkout } = require('../routes/orden.routes');
-
-ordenCntrl.renderNewOrden = (req, res) => {
-    res.render('orden/newOrden')
-    res.send();
-};
+//const { checkout } = require('../routes/orden.routes');
 
 ordenCntrl.createNewOrdenForm = async (req, res) => {
     const {
@@ -62,7 +57,7 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
                 Pesos, Estatus: estatus,
                 numeroProductos: numProductos, tamaño: pesoTotal
             })
-            //await newOrden.save();
+            await newOrden.save();
             res.send('new Orden')
         } else {
             res.send('invalid Coords')
@@ -80,7 +75,7 @@ ordenCntrl.consultOrden = async (req, res) => {
 
 ordenCntrl.updateStatus = async (req, res) => {
     const Estatus = req.body;
-    console.log(Estatus)
+    //console.log(Estatus)
     await Orden.findByIdAndUpdate(req.params.id, Estatus, { new: true });
     res.send('status updated');
 }

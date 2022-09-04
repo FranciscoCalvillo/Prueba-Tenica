@@ -80,6 +80,10 @@ const OrdenSchema = new Schema({
     //Id: Number,
     tamaño: String,
     numeroProductos: Number,
+    user:{
+        type: String,
+        require:true
+    }
 
 }, {
     timestamps: true
@@ -92,28 +96,6 @@ function sumWeights (Array) {
         total += number;
     }
     return total;
-}
-
-//inicialization auto generated data
-OrdenSchema.methods.countArticles = function() {
-  /* const newNumProductos = this.Pesos.length;
-    
-    const totalWight = sumWeights(this.Pesos);
-    
-    let weight = '';
-    if( totalWight <= 5){
-        weight = 'S';
-    } else if(totalWight <= 15){
-        weight = 'M';
-    } else if(totalWight <= 25){
-        weight = 'L'
-    } else {
-        weight = 'E';
-    }
-    const tamaño = weight;*/
-    let estatust ='';
-    estatust = 'creado';
-    return estatust
 }
 
 module.exports=model('OrdenCompra',OrdenSchema); 

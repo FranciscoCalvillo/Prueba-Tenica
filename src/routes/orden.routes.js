@@ -2,7 +2,7 @@ const {Router} = require('express');
 const router = Router();
 
 const { 
-    renderNewOrden, createNewOrdenForm, 
+    createNewOrdenForm, 
     consultOrden, updateStatus, 
     editOrden, cancelOrden
 } = require('../controllers/orden.controller');
