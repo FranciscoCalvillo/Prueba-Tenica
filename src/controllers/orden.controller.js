@@ -72,10 +72,10 @@ ordenCntrl.consultOrden = async(req, res) => {
 }
 
 ordenCntrl.updateStatus =  async(req, res) => {
-    res.send('edit form');
     const Estatus = req.body; 
     console.log(Estatus)
     await Orden.findByIdAndUpdate(req.params.id,Estatus,{new:true});
+    res.send('status updated');
 }
 
 ordenCntrl.editOrden = async (req, res) => {
@@ -102,14 +102,29 @@ ordenCntrl.editOrden = async (req, res) => {
         Pesos
    }, {new:true})
 
-    res.send('update your note');
+    res.send('Order updated');
 }
 
 ordenCntrl.cancelOrden = async (req, res) => {
-    const checkEstatus = await Orden.findById(req.params.id);
-    console.log(checkEstatus);
-    //await Orden.findByIdAndDelete(req.params.id);
-    res.send('deleting note');
+    const orden = await Orden.findById(req.params.id);
+    const decision = isDeleted(orden.Estatus);
+    const timeTranscure = miliSecsDif(orden.createdAt);
+
+    //console.log(timeTranscure);
+    if( decision ){
+        //console.log(decision);
+        if( timeTranscure){
+            await Orden.findByIdAndDelete(req.params.id);
+            res.send('Order deleted with refund')
+        } else {
+            await Orden.findByIdAndDelete(req.params.id);
+            res.send('Order deleted without refund');
+        }
+
+    } else {
+        res.send('cant delet this order');
+    }   
+   
 }
 
 
@@ -131,6 +146,30 @@ function sumWeights (Array) {
         weight = 'E';
     }
     return weight;
+}
+
+function isDeleted (estatus){
+    let resp = true;
+    if(estatus == "en_ruta" || estatus == "entregado"){
+        resp = false
+    }
+    return resp;
+}
+
+function miliSecsDif (creationDate){
+    let resp = 0;
+    let rembolso = false;
+    let actualDate = Date.now();
+    let tempDate = Date.parse(creationDate);
+
+    resp = (actualDate - tempDate)/60000;
+    
+    if(resp < 2){
+        rembolso = true;
+    }
+    
+    return rembolso;
+
 }
 
 module.exports = ordenCntrl;
