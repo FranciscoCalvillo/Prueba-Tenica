@@ -97,6 +97,8 @@ ordenCntrl.editOrden = async (req, res) => {
         Pesos
     } = req.body;
     //console.log(latitudDestino);
+    const numProductos = Pesos.length;
+    const pesoTotal = sumWeights(Pesos);
 
     await Orden.findByIdAndUpdate(req.params.id, {
         latitudDestino, longitudDestino,
@@ -106,7 +108,7 @@ ordenCntrl.editOrden = async (req, res) => {
         NumeroInterioOrigen, NumeroInterioDestino,
         CalleOrigen, codigoPostalOrigen,
         NumeroExtOrigen, LocalidadOrigen,
-        Pesos
+        Pesos, numeroProductos: numProductos, tamaño: pesoTotal
     }, { new: true })
 
     res.send('Order updated');
