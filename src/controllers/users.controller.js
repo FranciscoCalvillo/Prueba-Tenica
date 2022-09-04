@@ -6,22 +6,26 @@ const User = require('../models/user');
 usersCntrl.signUpRegister = async (req,res) => {
     
     const {name, email, password, confirmPass} = req.body; 
-    //console.log(req.body);
+
 
     if (name  && email && password && password==confirmPass){
-        const usedEmail = await orden.exists({email})!= null;
-        //console.log(usedEmail);
-        console.log(isValidEmail(email));
-        if( isValidEmail(email) && usedEmail){
-            
-            const newUser =  new User ({
-                name, email, password
-            }) 
-    
-            //await newUser.save();
-            res.send('sign up Succesful')
+        const usedEmail = await User.exists({email})!= null;
+        const usedName = await User.exists({name})!= null;
+
+        if( isValidEmail(email) && !usedEmail){
+            if( isValidName(name) && !usedName){
+                const newUser =  new User ({
+                    name, email, password
+                }) 
+        
+                //await newUser.save();
+                res.send('sign up Succesful')
+            } else {
+                res.send('this User name is invalid or already on use')
+            }
+           
         } else {
-            res.send('this email is not valid')
+            res.send('this email is not valid or already on use')
         }
         
     } else {
@@ -33,7 +37,7 @@ usersCntrl.signUpRegister = async (req,res) => {
 usersCntrl.signInUsers = async (req,res) =>{
     const {name, password} = req.body;
     const user = await User.exists({name,password});
-    console.log(user);
+    //console.log(user);
     if( user){
         res.send('Welcome');
     } else {
@@ -55,8 +59,26 @@ usersCntrl.getUsers = async (req,res) => {
 function isValidEmail(email) {
     let res =true;
     const comprob = email.split('@').join('.').split('.');
-    //console.log(comprob)
-    if (comprob == 3){
+
+    if (comprob.length == 3){
+        var i = 0;
+        while (i<comprob.length && res){
+            res = (/^[a-zA-Z]+$/.test(comprob[i]));
+            i++ ;
+        }
+        
+    } else {
+        res = false
+    }
+    return res;
+   
+}
+
+function isValidName(name) {
+    let res =true;
+    const comprob = name.split(' ');
+
+    if (comprob.length >= 1){
         var i = 0;
         while (i<comprob.length && res){
             res = (/^[a-zA-Z]+$/.test(comprob[i]));

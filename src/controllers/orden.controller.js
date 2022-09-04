@@ -81,32 +81,45 @@ ordenCntrl.updateStatus = async (req, res) => {
 }
 
 ordenCntrl.editOrden = async (req, res) => {
-    const {
-        latitudDestino, longitudDestino,
-        latitudOrigen, longitudOrigen,
-        Colonia, CalleDestino, codigoPostalDestino,
-        NumeroExtDestino, LocalidadDestino,
-        NumeroInterioOrigen, NumeroInterioDestino,
-        CalleOrigen, codigoPostalOrigen,
-        NumeroExtOrigen, LocalidadOrigen,
-        Pesos
-    } = req.body;
-    //console.log(latitudDestino);
-    const numProductos = Pesos.length;
-    const pesoTotal = sumWeights(Pesos);
-
-    await Orden.findByIdAndUpdate(req.params.id, {
-        latitudDestino, longitudDestino,
-        latitudOrigen, longitudOrigen,
-        Colonia, CalleDestino, codigoPostalDestino,
-        NumeroExtDestino, LocalidadDestino,
-        NumeroInterioOrigen, NumeroInterioDestino,
-        CalleOrigen, codigoPostalOrigen,
-        NumeroExtOrigen, LocalidadOrigen,
-        Pesos, numeroProductos: numProductos, tamaño: pesoTotal
-    }, { new: true })
-
-    res.send('Order updated');
+    const estatus = await Orden.findById(req.params.id);
+    
+    if ( estatus.Estatus != "cancelado"){
+        const {
+            latitudDestino, longitudDestino,
+            latitudOrigen, longitudOrigen,
+            Colonia, CalleDestino, codigoPostalDestino,
+            NumeroExtDestino, LocalidadDestino,
+            NumeroInterioOrigen, NumeroInterioDestino,
+            CalleOrigen, codigoPostalOrigen,
+            NumeroExtOrigen, LocalidadOrigen,
+            Pesos
+        } = req.body;
+        //console.log(latitudDestino);
+        try{
+            const numProductos = Pesos.length;
+            const pesoTotal = sumWeights(Pesos);
+    
+        } catch(error){
+            console.error(error);
+            res.send('Pesos invalidos o vacios');
+        }
+        
+        await Orden.findByIdAndUpdate(req.params.id, {
+            latitudDestino, longitudDestino,
+            latitudOrigen, longitudOrigen,
+            Colonia, CalleDestino, codigoPostalDestino,
+            NumeroExtDestino, LocalidadDestino,
+            NumeroInterioOrigen, NumeroInterioDestino,
+            CalleOrigen, codigoPostalOrigen,
+            NumeroExtOrigen, LocalidadOrigen,
+            Pesos, numeroProductos: numProductos, tamaño: pesoTotal
+        }, { new: true })
+    
+        res.send('Order updated');
+    } else {
+        res.send('This order is already cancel');
+    }
+    
 }
 
 ordenCntrl.cancelOrden = async (req, res) => {
@@ -116,10 +129,10 @@ ordenCntrl.cancelOrden = async (req, res) => {
 
     if (decision) {
         if (timeTranscure) {
-            await Orden.findByIdAndDelete(req.params.id);
+            await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
             res.send('Order deleted with refund')
         } else {
-            await Orden.findByIdAndDelete(req.params.id);
+            await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
             res.send('Order deleted without refund');
         }
 
