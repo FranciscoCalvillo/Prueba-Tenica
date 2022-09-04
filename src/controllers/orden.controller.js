@@ -71,8 +71,11 @@ ordenCntrl.consultOrden = async(req, res) => {
     res.json(ordenes);
 }
 
-ordenCntrl.editOrdenForm = (req, res) => {
+ordenCntrl.updateStatus =  async(req, res) => {
     res.send('edit form');
+    const Estatus = req.body; 
+    console.log(Estatus)
+    await Orden.findByIdAndUpdate(req.params.id,Estatus,{new:true});
 }
 
 ordenCntrl.editOrden = async (req, res) => {
