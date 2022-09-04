@@ -49,6 +49,7 @@ usersCntrl.signUpRegister = async (req, res) => {
     }
     
 }*/
+
 usersCntrl.signInUsers = passport.authenticate('login', {
     failureMessage: 'Incorrect credentials',
     successRedirect: '/orden'

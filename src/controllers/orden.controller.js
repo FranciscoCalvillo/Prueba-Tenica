@@ -2,6 +2,7 @@ const ordenCntrl = {};
 //const _ = require('underscore');
 
 const Orden = require('../models/orden');
+const generalUser = '6315268ddc2690b265033702';
 //const { checkout } = require('../routes/orden.routes');
 
 ordenCntrl.createNewOrdenForm = async (req, res) => {
@@ -42,7 +43,7 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
         const pesoTotal = sumWeights(Pesos);
 
         const mixCorrdOrig = latitudOrigen + ', ' + latitudDestino + '';
-
+        //const userId = req.user.id;
         if (isValidCoordinates(mixCorrdOrig)) {
 
             //console.log(validatorOrigen );
@@ -55,8 +56,10 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
                 CalleOrigen, codigoPostalOrigen,
                 NumeroExtOrigen, LocalidadOrigen,
                 Pesos, Estatus: estatus,
-                numeroProductos: numProductos, tamaño: pesoTotal
+                numeroProductos: numProductos, tamaño: pesoTotal,
+                user: req.user.id
             })
+             console.log(newOrden);
             await newOrden.save();
             res.send('new Orden')
         } else {
@@ -69,77 +72,91 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
 }
 
 ordenCntrl.consultOrden = async (req, res) => {
+    if(req.user.id != generalUser){
+        const ordenes = await Orden.find({user:req.user.id});
+        res.json(ordenes);
+    }
     const ordenes = await Orden.find();
     res.json(ordenes);
 }
 
 ordenCntrl.updateStatus = async (req, res) => {
     const Estatus = req.body;
+    //const orden = await Orden.findById(req.params.id);
     //console.log(Estatus)
-    await Orden.findByIdAndUpdate(req.params.id, Estatus, { new: true });
-    res.send('status updated');
+    if( req.params.id == generalUser){
+        await Orden.findByIdAndUpdate(req.params.id, Estatus, { new: true });
+        res.send('status updated');
+    }
+    res.send('cant edit status');
 }
 
 ordenCntrl.editOrden = async (req, res) => {
     const estatus = await Orden.findById(req.params.id);
-    
-    if ( estatus.Estatus != "cancelado"){
-        const {
-            latitudDestino, longitudDestino,
-            latitudOrigen, longitudOrigen,
-            Colonia, CalleDestino, codigoPostalDestino,
-            NumeroExtDestino, LocalidadDestino,
-            NumeroInterioOrigen, NumeroInterioDestino,
-            CalleOrigen, codigoPostalOrigen,
-            NumeroExtOrigen, LocalidadOrigen,
-            Pesos
-        } = req.body;
-        //console.log(latitudDestino);
-        try{
-            const numProductos = Pesos.length;
-            const pesoTotal = sumWeights(Pesos);
-    
-        } catch(error){
-            console.error(error);
-            res.send('Pesos invalidos o vacios');
-        }
+
+    if(estatus.user == generalUser || req.params.id == estatus.user){
+        if ( estatus.Estatus != "cancelado"){
+            const {
+                latitudDestino, longitudDestino,
+                latitudOrigen, longitudOrigen,
+                Colonia, CalleDestino, codigoPostalDestino,
+                NumeroExtDestino, LocalidadDestino,
+                NumeroInterioOrigen, NumeroInterioDestino,
+                CalleOrigen, codigoPostalOrigen,
+                NumeroExtOrigen, LocalidadOrigen,
+                Pesos
+            } = req.body;
+            //console.log(latitudDestino);
+            try{
+                const numProductos = Pesos.length;
+                const pesoTotal = sumWeights(Pesos);
         
-        await Orden.findByIdAndUpdate(req.params.id, {
-            latitudDestino, longitudDestino,
-            latitudOrigen, longitudOrigen,
-            Colonia, CalleDestino, codigoPostalDestino,
-            NumeroExtDestino, LocalidadDestino,
-            NumeroInterioOrigen, NumeroInterioDestino,
-            CalleOrigen, codigoPostalOrigen,
-            NumeroExtOrigen, LocalidadOrigen,
-            Pesos, numeroProductos: numProductos, tamaño: pesoTotal
-        }, { new: true })
-    
-        res.send('Order updated');
-    } else {
-        res.send('This order is already cancel');
+            } catch(error){
+                console.error(error);
+                res.send('Pesos invalidos o vacios');
+            }
+            
+            await Orden.findByIdAndUpdate(req.params.id, {
+                latitudDestino, longitudDestino,
+                latitudOrigen, longitudOrigen,
+                Colonia, CalleDestino, codigoPostalDestino,
+                NumeroExtDestino, LocalidadDestino,
+                NumeroInterioOrigen, NumeroInterioDestino,
+                CalleOrigen, codigoPostalOrigen,
+                NumeroExtOrigen, LocalidadOrigen,
+                Pesos, numeroProductos: numProductos, tamaño: pesoTotal
+            }, { new: true })
+        
+            res.send('Order updated');
+        } else {
+            res.send('This order is already cancel');
+        }
     }
+    
+    
     
 }
 
 ordenCntrl.cancelOrden = async (req, res) => {
     const orden = await Orden.findById(req.params.id);
-    const decision = isDeleted(orden.Estatus);
-    const timeTranscure = miliSecsDif(orden.createdAt);
 
-    if (decision) {
-        if (timeTranscure) {
-            await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
-            res.send('Order deleted with refund')
+    if(orden.user == generalUser || req.params.id == orden.user){
+        const decision = isDeleted(orden.Estatus);
+        const timeTranscure = miliSecsDif(orden.createdAt);
+
+        if (decision) {
+            if (timeTranscure) {
+                await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
+                res.send('Order deleted with refund')
+            } else {
+                await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
+                res.send('Order deleted without refund');
+            }
+
         } else {
-            await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
-            res.send('Order deleted without refund');
+            res.send('cant delet this order');
         }
-
-    } else {
-        res.send('cant delet this order');
     }
-
 }
 
 
