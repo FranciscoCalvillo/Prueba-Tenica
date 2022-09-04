@@ -12,3 +12,5 @@ mongoose.connect(MONGODB_URI, {
     .then(db => console.log('connected'))
     .catch(err => console.log(err));
 
+//module.exports = MONGODB_URI;
+

@@ -19,6 +19,6 @@ router.get('/orden/edit/:id', editOrdenForm);
 router.put('/orden/edit/:id', editOrden);
 
 //delet Order
-router.delete('/orden/delet/:id', cancelOrden);
+router.delete('/orden/delete/:id', cancelOrden);
 
 module.exports =router;
