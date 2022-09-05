@@ -57,7 +57,7 @@
 ## About The Project
 
 The repository presents a solution of a simple API to consult users information (in this caes purchase orders) implemented un Node JS 16.17.0 and MongoDB Shell 5.0.2.
-Also there are some implementations un other JavaScript packages that will be metion later with Bootstrasp 4 but in the end those are not used, but eliminated neither.
+Also there are some implementations un other JavaScript packages that will be metion later with Bootstrasp 4 that in the end those are not used, but eliminated neither.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
