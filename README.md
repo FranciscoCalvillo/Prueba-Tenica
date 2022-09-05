@@ -83,7 +83,7 @@ You need Node JS and Mongo DB in your computer before install this application. 
   ```sh
   node --version
   ```
-<p> To instal Node JS you only have to download the .exe int he main page and follow the instructions</p>
+<p> To instal Node JS you only have to download the .exe in the main page and follow the instructions</p>
 
 * Mongo DB
   ```sh
