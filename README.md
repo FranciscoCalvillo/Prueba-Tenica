@@ -100,7 +100,7 @@ Extra you should have installed Postman to make the test to the poyect
    ```sh
    git clone https://github.com/FranciscoCalvillo/Prueba-Tenica.git
    ```
-2. Install required package (all the proyect use dependencies off this ones so its essential)
+2. Install required package (all the project use dependencies off this ones so its essential)
    ```sh
    npm i - r express bycryptjs express-handelbars express-session mongoose passport passport-local morgan dotenv nodemon
    ```
