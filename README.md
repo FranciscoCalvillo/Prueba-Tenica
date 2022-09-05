@@ -104,7 +104,7 @@ Extra you should have installed Postman to make the test to the poyect
    ```sh
    npm i - r express bycryptjs express-handelbars express-session mongoose passport passport-local morgan dotenv nodemon
    ```
-3. Initalize mongo in a new console
+3. Initalize mongo in a new console (only if you had not install Mongo as a service)
    ```sh
    mongod
    ```
