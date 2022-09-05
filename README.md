@@ -129,7 +129,11 @@ A general roadmap of commits are showed int the next Postman repo:
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/23075707-c2465ef7-5194-4c44-98ea-3fd3db20dff6?action=collection%2Ffork&collection-url=entityId%3D23075707-c2465ef7-5194-4c44-98ea-3fd3db20dff6%26entityType%3Dcollection%26workspaceId%3D4f759117-bfda-43ce-af80-705c05158baa)
 
 <br/>
-All the commits are deployed in: [http://localhost:3000/](http://localhost:3000/) where you can find a basic not working page, all other functionalities are in the next endpoints:
+All the commits are deployed in: 
+
+[http://localhost:3000/](http://localhost:3000/)
+
+where you can find a basic not working page, all other functionalities are in the next endpoints:
 
  1. users/<br/>
     * This endpoint will display the list of all users without any specificly order .
