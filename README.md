@@ -115,7 +115,7 @@ Extra you should have installed Postman to make the test to the poyect
    ```sh
    npm run dev
    ```
-5. This Project suposses that exist already an admin user registrated and identified it with the User id, to modify it to your own id press F1 in Visual Studio Code or look for controllers and edit generalUser variable value in line 6
+5. This Project suposses that exist already an admin user registrated and identified it with the User id, to modify it to your own id press F1 in Visual Studio Code or look for controllers and edit generalUser variable value in line 6 of "orden.controller.js"
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
