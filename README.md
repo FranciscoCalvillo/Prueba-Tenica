@@ -108,51 +108,75 @@ Extra you should have installed Postman to make the test to the poyect
    ```sh
    mongod
    ```
+
+<p> Open a new terminal in the project directory </p>
+
 4. Run the local server using nodemon to auto restart it every main safe
    ```sh
    npm run dev
    ```
-5. This Project suposses that exist already an admin user registrated and identified it with the User id, to modify it to your own id press F1 in Visual Studio code or look for controllers and edit generalUser variable value in line 6
+5. This Project suposses that exist already an admin user registrated and identified it with the User id, to modify it to your own id press F1 in Visual Studio Code or look for controllers and edit generalUser variable value in line 6
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-Open a terminal at the directory of the project:
+Open Postman
 
-1. Make migrate 
-   ```sh
-   python manage.py makemigrate
-   ```
-2. Migrate
-    ```sh
-   python manage.py migrate
-   ```
-3. Run the server
-   ```sh
-   python manage.py runserver
-   ```
+A general roadmap of commits are showed int the next Postman repo:
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/23075707-c2465ef7-5194-4c44-98ea-3fd3db20dff6?action=collection%2Ffork&collection-url=entityId%3D23075707-c2465ef7-5194-4c44-98ea-3fd3db20dff6%26entityType%3Dcollection%26workspaceId%3D4f759117-bfda-43ce-af80-705c05158baa)
+
 <br/>
-This will run up the server locally at http://127.0.0.1:8000/ by default. The available endpoints are:
+All the commits are deployed in: http://localhost:3000/ where you can find a basic not working page, all other functionalities are in the next endpoints:
 
  1. users/<br/>
-    * This endpoint will display the list of all users without any specificly order.
+    * This endpoint will display the list of all users without any specificly order .
     <br/>  
- 2. users/id<br/>
-    This endpoint have three different behaviours:<br/>
-      * If the HTTP request method was GET, it's going to display all the data of the user with the given id.<br/>
-      * If the HTTP request method was PUT, it's going to update the data of the user with the given id using the data from the request's body.<br/>
-      * If the HTTP request method was DELETE, it's going to delete the user with the given id.<br/>
+ 2. users/singup<br/>
+    This endpoint works witg a method POST and check de information sended in a Json:<br/>
+      * If everything is alright then register a new user in the mongo data base.<br/>
+      * If the name has especial character its wrong and send error message.<br/>
+      * If the email has especial character or its already on use and send error message<br/>
+      * If the passwords dont match send error message <br/>
     <br/>
- 3. users/order-by-age/<br/>
-    * This endpoint will display the list of all users order by the age in descending order.
+ 3. users/singin/<br/>
+    This endpoint works with a method POST and check credential
+    * If email and password are correct then redirect you to your orders (/ordenes) <br/>
+    * If email or password are worng send error message. <br/>
     <br/>
- 4. users/order-by-lastname/<br/>
-    * This endpoint will display the list of all users order by the lastname in descending order.
+ 4. users/logout<br/>
+    * Send a logout message and end the session.
     <br/>
- 5. users/add/<br/>
-    * This endpoint lets you add new users to the database.
+    
+If youre not login then you can access to all of the following endpoints <br/>
+
+ 5. /orden<br/>
+    * This endpoint works with GET and show you all the orders of the user logged <br/>
+    * If you login with de Admin Account then you can see all orders no matter the owner <br/>
+    <br/>
+ 6. /orden/new-orden<br/>
+    * This endpoint  works with POST and get all de information in the Json, if it has all the required fields anth data type then show a new Orden messag<br/>
+    * If some data type are worng then send an error message <br/>
+    <br/>
+ 7. /orden/update-status/:id<br/>
+    * This endpoint look for the order with the given id and if its created by the logged user then update the given Status in the Json <br/>
+    * If you login with de Admin Account then you can edit all order status no matter the owner <br/>
+    * This endpoint use PUT <br/>
+    * The endopint alsao checks out if the status is already canceled then send a not possible message <br/>
+    </br>
+ 8. /orden/edit/:id<br/>
+    * This endpoint look for the order with the given id and if its created by the logged user then update data send in the Json <br/>
+    * If you login with de Admin Account then you can edit all orders no matter the owner <br/>
+    * This endpoint use PUT
+    </br>
+ 9. /orden/delete/:id<br/>
+    * This endpoint look for the order with the given id and if its created by the logged user then update the Estatus to "cancelado" <br/>
+    * If you login with de Admin Account then you can edit all order status no matter the owner <br/>
+    * This endpoint use PUT <br/>
+    * If the order was created in less than 2 min then you recived a "Order canceled with refund" message, else is a "without refund" message
+    </br>
 
   
 
@@ -163,9 +187,9 @@ This will run up the server locally at http://127.0.0.1:8000/ by default. The av
 <!-- CONTACT -->
 ## Contact
 
-Luis Alberto Pérez Muñoz - laperezmu@gmail.com
+Francisco Antonio Calvillo Lopez - lewlight@gmail.com
 
-Project Link: [https://github.com/laperezmu/api-usuarios](https://github.com/laperezmu/api-usuarios)
+Project Link: [https://github.com/FranciscoCalvillo/Prueba-Tenica](https://github.com/FranciscoCalvillo/Prueba-Tenica)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -174,5 +198,3 @@ Project Link: [https://github.com/laperezmu/api-usuarios](https://github.com/lap
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/laperezmu
