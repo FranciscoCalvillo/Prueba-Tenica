@@ -13,12 +13,12 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">API Usuarios</h3>
+<h3 align="center">API Users and Orders</h3>
 
   <p align="center">
-    Simple API made with Django
+    Simple API made with Node JS and MongoDB
     <br />
-    <a href="https://github.com/laperezmu/api-usuarios"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/FranciscoCalvillo/Prueba-Tenica"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
@@ -56,7 +56,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The repository presents Django 3.2.8 with Django rest framework implementation of a simple API to consult users information
+The repository presents a solution of a simple API to consult users information (in this caes purchase orders) implemented un Node JS 16.17.0 and MongoDB Shell 5.0.2.
+Also there are some implementations un other JavaScript packages that will be metion later with Bootstrasp 4 but in the end those are not used, but eliminated neither.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -64,8 +65,8 @@ The repository presents Django 3.2.8 with Django rest framework implementation o
 
 ### Built With
 
-* [Django](https://www.djangoproject.com)
-* [Django rest framework](https://www.django-rest-framework.org)
+* [Node JS](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.com/try/download/community)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -76,23 +77,42 @@ The repository presents Django 3.2.8 with Django rest framework implementation o
 
 ### Prerequisites
 
-You need Python3 in your computer before install this application. To check if you already have Python3 installed, open a terminal and copy and paste the next command:
+You need Node JS and Mongo DB in your computer before install this application. To check if you already have both installed, open a terminal and copy and paste the next commands:
 
-* Python3
+* Node JS
   ```sh
-  python --version
+  node --version
   ```
+<p> To instal Node JS you only have to download the .exe int he main page and follow the instructions</p>
 
-### Installation
+* Mongo DB
+  ```sh
+  mongo --version
+  ```
+  <p> To instal MongoDB as Node you have to download the .exe int he main page and follow the instructions. If you choose to install as a service mongo will be running every time you turn on your pc, in the other case yo woll need an extra comand in console to run and creat a new path in your system</p>
+  <p>
+Extra you should have installed Postman to make the test to the poyect
+  </p>
+
+### Installation and Requirements
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/laperezmu/api-usuarios.git
+   git clone https://github.com/FranciscoCalvillo/Prueba-Tenica.git
    ```
-2. Install required modules (It's recommendable make and run a virtual enviroment before install dependencies)
+2. Install required package (all the proyect use dependencies off this ones so its essential)
    ```sh
-   pip install - r requirements.txt
+   npm i - r express bycryptjs express-handelbars express-session mongoose passport passport-local morgan dotenv nodemon
    ```
+3. Initalize mongo in a new console
+   ```sh
+   mongod
+   ```
+4. Run the local server using nodemon to auto restart it every main safe
+   ```sh
+   npm run dev
+   ```
+5. This Project suposses that exist already an admin user registrated and identified it with the User id, to modify it to your own id press F1 in Visual Studio code or look for controllers and edit generalUser variable value in line 6
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
