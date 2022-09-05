@@ -1,8 +1,9 @@
 const ordenCntrl = {};
+const { use } = require('passport');
 //const _ = require('underscore');
 
 const Orden = require('../models/orden');
-const generalUser = '6315268ddc2690b265033702';
+const generalUser = "63152cb98439c1e4b1d3364f";
 //const { checkout } = require('../routes/orden.routes');
 
 ordenCntrl.createNewOrdenForm = async (req, res) => {
@@ -28,7 +29,7 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
         //general data
         Pesos
     } = req.body;
-
+    //console.log(req.body);
     if (
         latitudDestino && longitudDestino &&
         latitudOrigen && longitudOrigen &&
@@ -38,64 +39,91 @@ ordenCntrl.createNewOrdenForm = async (req, res) => {
         CalleOrigen && codigoPostalOrigen &&
         Pesos
     ) {
-        const estatus = 'creado';
-        const numProductos = Pesos.length;
-        const pesoTotal = sumWeights(Pesos);
+        try {
+            const estatus = 'creado';
+            const numProductos = Pesos.length;
 
-        const mixCorrdOrig = latitudOrigen + ', ' + latitudDestino + '';
-        //const userId = req.user.id;
-        if (isValidCoordinates(mixCorrdOrig)) {
 
-            //console.log(validatorOrigen );
-            const newOrden = new Orden({
-                latitudDestino, longitudDestino,
-                latitudOrigen, longitudOrigen,
-                Colonia, CalleDestino, codigoPostalDestino,
-                NumeroExtDestino, LocalidadDestino,
-                NumeroInterioOrigen, NumeroInterioDestino,
-                CalleOrigen, codigoPostalOrigen,
-                NumeroExtOrigen, LocalidadOrigen,
-                Pesos, Estatus: estatus,
-                numeroProductos: numProductos, tamaño: pesoTotal,
-                user: req.user.id
-            })
-             console.log(newOrden);
-            await newOrden.save();
-            res.send('new Orden')
-        } else {
-            res.send('invalid Coords')
+            const pesoTotal = sumWeights(Pesos);
+
+            const mixCorrdOrig = latitudOrigen + ', ' + latitudDestino + '';
+            //const userId = req.user.id;
+            if (isValidCoordinates(mixCorrdOrig)) {
+
+                //console.log(validatorOrigen );
+                const newOrden = new Orden({
+                    latitudDestino, longitudDestino,
+                    latitudOrigen, longitudOrigen,
+                    Colonia, CalleDestino, codigoPostalDestino,
+                    NumeroExtDestino, LocalidadDestino,
+                    NumeroInterioOrigen, NumeroInterioDestino,
+                    CalleOrigen, codigoPostalOrigen,
+                    NumeroExtOrigen, LocalidadOrigen,
+                    Pesos, Estatus: estatus,
+                    numeroProductos: numProductos, tamaño: pesoTotal,
+                    user: req.user.id
+                })
+                //console.log(newOrden);
+                await newOrden.save();
+                res.send('new Orden')
+
+            } else {
+                res.send('invalid Coords')
+            }
+        } catch (error) {
+            console.error(error);
+            res.send('Pesos invalidos o vacios');
         }
     } else {
         res.send('Wrong Request');
     }
 
+
 }
 
 ordenCntrl.consultOrden = async (req, res) => {
-    if(req.user.id != generalUser){
-        const ordenes = await Orden.find({user:req.user.id});
-        res.json(ordenes);
+    const orden = await Orden.find({user:req.user.id});
+    //console.log(orden)
+    if (req.user.id == generalUser) {
+        const ordenes = await Orden.find();
+        if (ordenes) {
+            res.json(ordenes);
+        } else {
+            res.send('empty')
+        }
+    } else{
+        const ordenes = await Orden.find({ user: req.user.id });
+        if (ordenes) {
+            res.json(ordenes);
+        } else {
+            res.send('empty 2')
+        }
     }
-    const ordenes = await Orden.find();
-    res.json(ordenes);
+   
+
 }
 
 ordenCntrl.updateStatus = async (req, res) => {
     const Estatus = req.body;
-    //const orden = await Orden.findById(req.params.id);
+    const user = await Orden.findById(req.params.id);
     //console.log(Estatus)
-    if( req.params.id == generalUser){
+    if (req.user.id == user.user || req.user.id == generalUser) {
+        console.log('entra');
         await Orden.findByIdAndUpdate(req.params.id, Estatus, { new: true });
         res.send('status updated');
     }
-    res.send('cant edit status');
+    else {
+        res.send('cant edit status');
+    }
+
 }
 
 ordenCntrl.editOrden = async (req, res) => {
     const estatus = await Orden.findById(req.params.id);
 
-    if(estatus.user == generalUser || req.params.id == estatus.user){
-        if ( estatus.Estatus != "cancelado"){
+    if (req.user.id == estatus.user || req.user.id == generalUser) {
+        if (estatus.Estatus != "cancelado") {
+
             const {
                 latitudDestino, longitudDestino,
                 latitudOrigen, longitudOrigen,
@@ -106,56 +134,68 @@ ordenCntrl.editOrden = async (req, res) => {
                 NumeroExtOrigen, LocalidadOrigen,
                 Pesos
             } = req.body;
-            //console.log(latitudDestino);
-            try{
+            //console.log(Pesos!= undefined);
+            if (Pesos != undefined) {
                 const numProductos = Pesos.length;
                 const pesoTotal = sumWeights(Pesos);
-        
-            } catch(error){
-                console.error(error);
-                res.send('Pesos invalidos o vacios');
+                await Orden.findByIdAndUpdate(req.params.id, {
+                    latitudDestino, longitudDestino,
+                    latitudOrigen, longitudOrigen,
+                    Colonia, CalleDestino, codigoPostalDestino,
+                    NumeroExtDestino, LocalidadDestino,
+                    NumeroInterioOrigen, NumeroInterioDestino,
+                    CalleOrigen, codigoPostalOrigen,
+                    NumeroExtOrigen, LocalidadOrigen,
+                    Pesos, numeroProductos: numProductos, tamaño: pesoTotal
+                }, { new: true })
+
+                res.send('Order updated');
             }
-            
-            await Orden.findByIdAndUpdate(req.params.id, {
-                latitudDestino, longitudDestino,
-                latitudOrigen, longitudOrigen,
-                Colonia, CalleDestino, codigoPostalDestino,
-                NumeroExtDestino, LocalidadDestino,
-                NumeroInterioOrigen, NumeroInterioDestino,
-                CalleOrigen, codigoPostalOrigen,
-                NumeroExtOrigen, LocalidadOrigen,
-                Pesos, numeroProductos: numProductos, tamaño: pesoTotal
-            }, { new: true })
-        
-            res.send('Order updated');
+            else {
+                await Orden.findByIdAndUpdate(req.params.id, {
+                    latitudDestino, longitudDestino,
+                    latitudOrigen, longitudOrigen,
+                    Colonia, CalleDestino, codigoPostalDestino,
+                    NumeroExtDestino, LocalidadDestino,
+                    NumeroInterioOrigen, NumeroInterioDestino,
+                    CalleOrigen, codigoPostalOrigen,
+                    NumeroExtOrigen, LocalidadOrigen
+                }, { new: true })
+
+                res.send('Order updated');
+            }
+
         } else {
             res.send('This order is already cancel');
         }
+    } else {
+        res.send('cant edit')
     }
-    
-    
-    
+
 }
 
 ordenCntrl.cancelOrden = async (req, res) => {
     const orden = await Orden.findById(req.params.id);
 
-    if(orden.user == generalUser || req.params.id == orden.user){
+    if (req.user.id == orden.user || req.user.id == generalUser) {
         const decision = isDeleted(orden.Estatus);
         const timeTranscure = miliSecsDif(orden.createdAt);
 
         if (decision) {
             if (timeTranscure) {
-                await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
-                res.send('Order deleted with refund')
+                await Orden.findByIdAndUpdate(req.params.id, { Estatus: 'cancelado' });
+                res.send('Order canceld with refund')
             } else {
-                await Orden.findByIdAndUpdate(req.params.id,{Estatus:'cancelado'});
-                res.send('Order deleted without refund');
+                await Orden.findByIdAndUpdate(req.params.id, { Estatus: 'cancelado' });
+                res.send('Order canceled without refund');
             }
 
         } else {
-            res.send('cant delet this order');
+            res.send('cant cancel this order');
         }
+    }
+    else {
+        res.send('cant reach this order')
     }
 }
 
@@ -212,4 +252,11 @@ function isValidCoordinates(coordinates) {
     return (latitude > -90 && latitude < 90 && longitude > -180 && longitude < 180);
 }
 
+/*async function getUsuarioGeneralId(){
+    const userId =  await Orden.findOne({email:"general@empresa.com"});
+    if (userId){
+        return userId.id;
+    }
+    return 'null';
+}*/
 module.exports = ordenCntrl;
